@@ -1,4 +1,4 @@
 module Main where
-import Board
+import GoWageWar.Board
 
 main = undefined
