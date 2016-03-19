@@ -9,6 +9,7 @@ module GoWageWar.Board
         endTurn,
         recalculateInfluence
     ) where
+
 import Data.Matrix
 
 -- | Colour of a player

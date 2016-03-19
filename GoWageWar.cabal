@@ -28,5 +28,3 @@ executable GoWageWar
                          GoWageWar
     hs-source-dirs:      game
     default-language:    Haskell2010
-
-
