@@ -7,7 +7,8 @@ module GoWageWar.Board
         manhattan,
         circle,
         endTurn,
-        recalculateInfluence
+        recalculateInfluence,
+        addTower
     ) where
 
 import Data.Matrix
@@ -94,6 +95,7 @@ applyInfluenceChange b xs = applyInfluenceChange' (fmap (\(x, y) -> (x, 0)) b) x
 killTowers :: Board -> Board
 killTowers = fmap kill
     where
+        -- | Kill a tower on a cell if it has no influence
         kill :: Cell -> Cell
         kill (Just (t, c), i)
             | i `div` (colourSignum c) < 0 = (Nothing, i)
@@ -106,3 +108,17 @@ recalculateInfluence board = applyInfluenceChange board (absoluteInfluences boar
 -- | End the turn
 endTurn :: Board -> Board
 endTurn = recalculateInfluence . killTowers . recalculateInfluence
+
+-- | Add a tower to a cell
+addTower :: Tower -> Colour -> Cord -> Board -> Maybe Board 
+addTower t c cords board =
+    -- Are we on the board
+    if inRange board cords then
+        -- Check the square
+        case board!cords of
+            -- The square is empty
+            (Nothing, _) -> Just $ recalculateInfluence $ setElem (Just (t, c), 0) cords board
+            -- This square is occupied
+            _            -> Nothing
+    else
+        Nothing
