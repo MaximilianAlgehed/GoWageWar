@@ -1,5 +1,5 @@
 module Main where
-import GoWageWar.Board
+import GoWageWar.Board.Cord
 import Test.QuickCheck
 
 -- All distances in the circle are <= n

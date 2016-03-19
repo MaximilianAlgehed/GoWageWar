@@ -3,15 +3,15 @@ module GoWageWar.Board
         Colour (..),
         Tower (..),
         Board,
-        Cord,
-        manhattan,
-        circle,
+        Influence,
+        Resources,
         endTurn,
         recalculateInfluence,
         addTower
     ) where
 
 import Data.Matrix
+import GoWageWar.Board.Cord
 
 -- | Colour of a player
 data Colour = Red
@@ -32,33 +32,8 @@ data Tower  = Wall
 -- | The influence type
 type Influence = Int
 
--- | The type of a cell
-type Cell      = (Maybe (Tower, Colour), Influence)
-
--- | The type of the board
-type Board     = Matrix Cell
-
--- | A Board co-ordinate
-type Cord      = (Int, Int)
-
--- | Add one Cord to another
-addC :: Cord -> Cord -> Cord
-addC (x, y) (z, w) = (x+z, y+w)
-
--- | Check if a Cord is in range of a board
-inRange :: Board -> Cord -> Bool
-inRange b (x, y) = (x > 0) && (x <= (nrows b)) && (y > 0) && (y <= (ncols b))
-
--- | Get the manhattan distance from one cord to another
-manhattan :: Cord -> Cord -> Int
-manhattan (a, b) (x, y) = abs (a - x) + abs (b - y)
-
--- | Get all cords in a manhattan radius around (0, 0)
-circle :: Int -> [Cord]
-circle 0 = [(0, 0)]
-circle n = circle (n-1) ++ lst ++ map (\(x, y) -> (-x, -y)) lst
-    where
-        lst = [(x, n-x) | x <- [0..n]]
+-- | The resource type
+type Resources = Int
 
 -- | The influence of a tower
 influence :: Tower -> [(Influence, Cord)]
@@ -69,6 +44,22 @@ influence Keep       = decCircle 6 2 0
 -- | A circle of decreasing influence in an area around (0, 0)
 decCircle :: Influence -> Int -> Int -> [(Influence, Cord)]
 decCircle value rate r = [(value `div` (rate^(manhattan (0, 0) p)), p) | p <- circle r]
+
+-- | The cost of a tower
+cost :: Tower -> Resources
+cost Wall       = 1
+cost Watchtower = 3
+cost Keep       = 4
+
+-- | The type of a cell
+type Cell      = (Maybe (Tower, Colour), Influence)
+
+-- | The type of the board
+type Board     = Matrix Cell
+
+-- | Check if a Cord is in range of a board
+inRange :: Board -> Cord -> Bool
+inRange b (x, y) = (x > 0) && (x <= (nrows b)) && (y > 0) && (y <= (ncols b))
 
 -- | Get a list of influences in absolute board terms
 absoluteInfluences :: Board -> [(Influence, Cord)]
