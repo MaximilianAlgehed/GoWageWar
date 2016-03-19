@@ -6,8 +6,8 @@ module GoWageWar.Board
         Cord,
         manhattan,
         circle,
-        absoluteInfluences,
-        applyInfluenceChange
+        endTurn,
+        recalculateInfluence
     ) where
 import Data.Matrix
 
@@ -45,7 +45,7 @@ addC (x, y) (z, w) = (x+z, y+w)
 
 -- | Check if a Cord is in range of a board
 inRange :: Board -> Cord -> Bool
-inRange b (x, y) = (x > 0) && (x <= (ncols b)) && (y > 0) && (y <= (nrows b))
+inRange b (x, y) = (x > 0) && (x <= (nrows b)) && (y > 0) && (y <= (ncols b))
 
 -- | Get the manhattan distance from one cord to another
 manhattan :: Cord -> Cord -> Int
@@ -72,8 +72,8 @@ decCircle value rate r = [(value `div` (rate^(manhattan (0, 0) p)), p) | p <- ci
 absoluteInfluences :: Board -> [(Influence, Cord)]
 absoluteInfluences b =
     do
-        i <- [1..(ncols b)] -- Get the column
-        j <- [1..(nrows b)] -- Get the row
+        i <- [1..(nrows b)] -- Get the column
+        j <- [1..(ncols b)] -- Get the row
         (Just (t, c), _) <- return $ b!(i, j) -- Get the tower and colour
         -- Get the new value
         let influences = influence t
@@ -88,3 +88,20 @@ applyInfluenceChange b xs = applyInfluenceChange' (fmap (\(x, y) -> (x, 0)) b) x
         applyInfluenceChange' b' []             = b'
         applyInfluenceChange' b' ((x, cord):xs) = let (v, curinf) = b'!cord in
                                                   applyInfluenceChange' (setElem (v, curinf+x) cord b') xs
+
+-- | Kill non-influential towers
+killTowers :: Board -> Board
+killTowers = fmap kill
+    where
+        kill :: Cell -> Cell
+        kill (Just (t, c), i)
+            | i `div` (colourSignum c) < 0 = (Nothing, i)
+            | otherwise                    = (Just (t, c), i)
+
+-- | Recalculate the influence on the board
+recalculateInfluence :: Board -> Board
+recalculateInfluence board = applyInfluenceChange board (absoluteInfluences board)
+
+-- | End the turn
+endTurn :: Board -> Board
+endTurn = recalculateInfluence . killTowers . recalculateInfluence
