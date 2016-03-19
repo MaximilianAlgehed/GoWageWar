@@ -8,10 +8,9 @@
 * Define the state to hold in the Brick app type
 
 ## Board
-* Define the influence calculation
 * Define the killing of towers
 * Define the resource calculation
-* Define the end-turn
+* Define the end-turn function: influenceCalc -> killTowers -> influenceCalc
 
 ## Networking
 * Define the basic protocol
