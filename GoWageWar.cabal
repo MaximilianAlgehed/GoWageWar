@@ -21,12 +21,18 @@ library
                          GoWageWar.Board.Cord,
                          GoWageWar.Graphics
     build-depends:       base >=4.8 && <4.9,
-                         matrix
+                         matrix,
+                         brick,
+                         vty
     default-language:    Haskell2010
 
 executable GoWageWar
     main-is:             Main.hs
     build-depends:       base >=4.8 && <4.9,
-                         GoWageWar
+                         GoWageWar,
+                         brick,
+                         vty,
+                         matrix
     hs-source-dirs:      game
     default-language:    Haskell2010
+    ghc-options:         -threaded 
