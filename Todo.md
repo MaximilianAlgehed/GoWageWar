@@ -14,7 +14,6 @@ Todos organized by category
 * Define a general drawing interface
 
 ## Graphics
-* Choose graphics engine
 * Implement simple GUI
 
 ## Networking
@@ -22,3 +21,6 @@ Todos organized by category
 
 ## Server
 * Scetch the erlang server architecture
+
+## Optimization
+* Optimize the `circle` function in GoWageWar.Board.Cord
