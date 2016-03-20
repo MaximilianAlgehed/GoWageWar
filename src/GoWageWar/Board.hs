@@ -7,11 +7,13 @@ module GoWageWar.Board
         Resources,
         endTurn,
         recalculateInfluence,
-        addTower
+        addTower,
+        calculateResources
     ) where
 
 import Data.Matrix
 import GoWageWar.Board.Cord
+import Control.Monad
 
 -- | Colour of a player
 data Colour = Red
@@ -28,6 +30,10 @@ data Tower  = Wall
             | Watchtower
             | Keep
             deriving (Ord, Eq, Show)
+
+-- | The radius in which keeps generate resources
+resourceRadius :: Int
+resourceRadius = 2
 
 -- | The influence type
 type Influence = Int
@@ -91,6 +97,7 @@ killTowers = fmap kill
         kill (Just (t, c), i)
             | i `div` (colourSignum c) < 0 = (Nothing, i)
             | otherwise                    = (Just (t, c), i)
+        kill x                             = x                             
 
 -- | Recalculate the influence on the board
 recalculateInfluence :: Board -> Board
@@ -113,3 +120,23 @@ addTower t c cords board =
             _            -> Nothing
     else
         Nothing
+
+-- | Calculate the resources gained from a tile
+calculateResourcesAt :: Board -> Cord -> (Resources, Colour)
+calculateResourcesAt board c = case board!c of
+    (Just (Keep, colour), _) -> (length available, colour)
+        where
+            available = do
+                (Nothing, infl) <- (map (\cord -> board!cord) $
+                                    filter (inRange board) $
+                                    (map (addC c)) (circle resourceRadius))
+                guard (infl `div` (colourSignum colour) >= 0)
+    _                        -> (0, Red)
+
+-- | Calculate the resources for (red, blue)
+calculateResources :: Board -> (Resources, Resources)
+calculateResources board = foldl fun (0, 0) raw
+    where
+        raw = map (calculateResourcesAt board) [(i, j) | i <- [1..(nrows board)], j <- [1..(ncols board)]]
+        fun (x, y) (z, Red)  = (x+z, y)
+        fun (x, y) (z, Blue) = (x, y+z)
