@@ -7,7 +7,7 @@ import Brick.AttrMap
 import Graphics.Vty
 
 theApp :: App Board Event
-theApp = App {appDraw = (:[]) . drawBoard,
+theApp = App {appDraw = (\x -> [drawBoard x Nothing]),
               appChooseCursor = const (const Nothing),
               appHandleEvent = (\b _ -> halt b),
               appStartEvent = return,
