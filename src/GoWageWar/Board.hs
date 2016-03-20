@@ -1,7 +1,9 @@
 module GoWageWar.Board
     (
         Colour (..),
+        colourSignum,
         Tower (..),
+        Cell,
         Board,
         Influence,
         Resources,
