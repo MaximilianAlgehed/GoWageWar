@@ -27,6 +27,7 @@ drawBoard board = withBorderStyle unicodeBold
                 $ toLists
                 $ fmap toWidget board
 
+-- | The padding around a cell
 padding :: Int
 padding = 0
 
