@@ -11,10 +11,11 @@ Todos organized by category
 * Move balance things to their own modules
 
 ## Board
-* Define a general drawing interface
 
 ## Graphics
 * Implement simple GUI
+* Implement statefull application
+* Implement blinking cursor using custom events
 
 ## Networking
 * Define the basic protocol
