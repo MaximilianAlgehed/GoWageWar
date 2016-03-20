@@ -4,12 +4,13 @@ Todos organized by category
 ## Design
 * Resource per turn or persistent?
 * Move simultaneously or one after another?
+* Do playtests
 
 ## Architecture
 * Move tower to it's own module
+* Move balance things to their own modules
 
 ## Board
-* Define the resource calculation
 * Define a general drawing interface
 
 ## Graphics
