@@ -5,10 +5,11 @@ module GoWageWar.Event
 
 import qualified Graphics.Vty as VTY
 import GoWageWar.Board.Cord
+import GoWageWar.Board
 
 data Event = VtyEvent VTY.Event
            | ClockTick Double
            | NEvent NetworkEvent
 
 data NetworkEvent = Resign
-                  | Play Cord
+                  | Play Tower Cord

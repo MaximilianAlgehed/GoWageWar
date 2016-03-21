@@ -19,7 +19,8 @@ library
     hs-source-dirs:      src
     exposed-modules:     GoWageWar.Board,
                          GoWageWar.Board.Cord,
-                         GoWageWar.Graphics
+                         GoWageWar.Graphics,
+                         GoWageWar.Event
     build-depends:       base >=4.8 && <4.9,
                          matrix,
                          brick,
