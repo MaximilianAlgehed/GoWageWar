@@ -3,6 +3,7 @@ module GoWageWar.Board
         Colour (..),
         colourSignum,
         Tower (..),
+        price,
         Cell,
         Board,
         Influence,
@@ -36,6 +37,12 @@ data Tower  = Wall
 -- | The radius in which keeps generate resources
 resourceRadius :: Int
 resourceRadius = 2
+
+-- | The price of a tower
+price :: Tower -> Resources
+price Keep       = 5
+price Wall       = 3
+price Watchtower = 2
 
 -- | The influence type
 type Influence = Int
