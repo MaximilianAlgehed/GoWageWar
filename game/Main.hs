@@ -11,11 +11,8 @@ import Graphics.Vty
 
 data TheState = TheState {cursor :: Maybe Cord, board :: Board, turn :: Bool, resources :: Resources}
 
-clamp :: Board -> Cord -> Cord
-clamp b (r, c) = (min (max 1 r) (nrows b), min (max 1 c) (ncols b))
-
 move :: Cord -> TheState -> TheState
-move c st = TheState (move' c (cursor st)) (board st) (turn st) (resources st)
+move c st = st {cursor = (move' c (cursor st))}
     where
         move' co mc = clamp (board st) <$> addC co <$> mc
 
@@ -26,19 +23,17 @@ place t st
         Nothing -> st
         Just c -> case (board st)!c of
             (Nothing, _) ->
-                if price t >= resources st then
-                    (TheState
-                        (Just c)
-                        (recalculateInfluence (setElem (Just (t, Red), 0) c (board st)))
-                        True
-                        ((resources st) - (price t))
-                    )
+                if (resources st) >= (price t) then
+                    st {
+                        board     = (recalculateInfluence (setElem (Just (t, Red), 0) c (board st))),
+                        turn      = True,
+                        resources = ((resources st) - (price t))
+                    }
                 else
                     st
             _            -> st
     | otherwise = st
                 
-
 m_handleEvent :: TheState -> Event -> EventM (Next TheState)
 m_handleEvent st ev =
     case ev of
@@ -61,14 +56,14 @@ theApp = App {appDraw = (\st -> [drawBoard (board st) (cursor st)]),
               appAttrMap = const $ attrMap defAttr attributes
              }
 
-bboard = endTurn $ fromLists [
-    [(Nothing, 0), (Nothing, 0),                (Nothing, 0),  (Nothing, 0),          (Nothing, 0),                (Nothing, 0)],
-    [(Nothing, 0), (Nothing, 0),                (Nothing, 0),  (Nothing, 0),          (Nothing, 0),                (Nothing, 0)],
-    [(Nothing, 0), (Just (Keep, Blue), 0),      (Nothing, 0),  (Nothing, 0),          (Just (Watchtower, Red), 0), (Nothing, 0)],
-    [(Nothing, 0), (Just (Watchtower, Blue), 0),(Nothing, 0),  (Just (Keep, Red), 0), (Nothing, 0),                (Nothing, 0)],
-    [(Nothing, 0), (Just (Wall, Blue), 0),      (Nothing, 0),  (Nothing, 0),          (Nothing, 0),                (Nothing, 0)],
-    [(Just (Wall, Red), 0), (Nothing, 0),                (Nothing, 0),  (Nothing, 0),          (Nothing, 0),                (Nothing, 0)],
-    [(Just (Watchtower, Red), 0), (Just (Wall, Red), 0),                (Nothing, 0),  (Nothing, 0),          (Nothing, 0),                (Just (Wall, Red), 0)]
-   ]
+bboard = fromLists $ replicate 19 $ replicate 19 (Nothing, 0) 
 
-main = defaultMain theApp (TheState (Just (1, 1)) bboard True 10)
+initialState = TheState
+    {
+        cursor    = Just (1,1),
+        board     = bboard,
+        turn      = True,
+        resources = 10
+    }
+
+main = defaultMain theApp initialState

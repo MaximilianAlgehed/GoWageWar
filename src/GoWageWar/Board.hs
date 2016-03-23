@@ -11,7 +11,8 @@ module GoWageWar.Board
         endTurn,
         recalculateInfluence,
         addTower,
-        calculateResources
+        calculateResources,
+        clamp
     ) where
 
 import Data.Matrix
@@ -149,3 +150,7 @@ calculateResources board = foldl fun (0, 0) raw
         raw = map (calculateResourcesAt board) [(i, j) | i <- [1..(nrows board)], j <- [1..(ncols board)]]
         fun (x, y) (z, Red)  = (x+z, y)
         fun (x, y) (z, Blue) = (x, y+z)
+
+-- | Clamp a Cord to the bounds of a board
+clamp :: Board -> Cord -> Cord
+clamp b (r, c) = (min (max 1 r) (nrows b), min (max 1 c) (ncols b))
