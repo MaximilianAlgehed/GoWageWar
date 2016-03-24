@@ -9,12 +9,13 @@ Todos organized by category
 ## Architecture
 * Move tower to it's own module
 * Move balance things to their own modules
+* Implement a clean architecture for the application state
 
 ## Board
 
 ## Graphics
 * Implement simple GUI
-* Implement statefull application
+* Implement scrolling view over the board
 * Implement blinking cursor using custom events
 
 ## Networking
