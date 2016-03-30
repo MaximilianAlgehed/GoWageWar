@@ -2,7 +2,8 @@
 module GoWageWar.Graphics
     (
         drawBoard,
-        attributes
+        attributes,
+        colourAttributeName
     ) where
 import GoWageWar.Board
 import GoWageWar.Board.Cord
@@ -14,6 +15,10 @@ import Brick.AttrMap
 import Brick.Types
 import Brick.Util
 import Graphics.Vty.Attributes
+
+colourAttributeName :: Colour -> AttrName
+colourAttributeName Red  = "red"
+colourAttributeName Blue = "blue"
 
 -- | The attributes for red and blue
 attributes :: [(AttrName, Attr)]
@@ -45,8 +50,10 @@ toWidget (Nothing, x)
     | signum x == colourSignum Red = padAll padding $ withAttr "red" $ str (show (abs x)) -- Influence from red
     | otherwise                    = padAll padding $ withAttr "blue" $ str (show (abs x)) -- Influence from blue
 toWidget (Just (t, colour), _)
-    | colour == Red                = padAll padding $ withAttr "red" $ str $ towerStr t -- Red tower
-    | otherwise                    = padAll padding $ withAttr "blue" $ str $ towerStr t -- Blue tower
+    | colour == Red                = padAll padding
+                                     $ withAttr (colourAttributeName colour)
+                                     $ str
+                                     $ towerStr t
     where
         towerStr Wall       = "⋄"
         towerStr Watchtower = "∆"

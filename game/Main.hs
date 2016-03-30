@@ -1,7 +1,8 @@
 module Main where
+
 import Control.Monad
 import Data.Matrix
-import GoWageWar.Board
+import GoWageWar.Board hiding (move)
 import GoWageWar.Graphics
 import GoWageWar.Board.Cord
 import Brick.Main
@@ -45,7 +46,7 @@ m_handleEvent st ev =
         EvKey (KChar '1') [] -> continue $ place Watchtower st
         EvKey (KChar '2') [] -> continue $ place Keep st
         EvKey (KChar '3') [] -> continue $ place Wall st
-        _             -> continue st
+        _                    -> continue st
 
 theApp :: App TheState Event
 theApp = App {appDraw = (\st -> [drawBoard (board st) (cursor st)]),

@@ -1,5 +1,6 @@
 module GoWageWar.Board
     (
+        module GoWageWar.Board.Cord,
         Colour (..),
         colourSignum,
         Tower (..),
@@ -12,11 +13,12 @@ module GoWageWar.Board
         recalculateInfluence,
         addTower,
         calculateResources,
-        clamp
+        clamp,
+        move
     ) where
 
-import Data.Matrix
 import GoWageWar.Board.Cord
+import Data.Matrix
 import Control.Monad
 
 -- | Colour of a player
@@ -154,3 +156,7 @@ calculateResources board = foldl fun (0, 0) raw
 -- | Clamp a Cord to the bounds of a board
 clamp :: Board -> Cord -> Cord
 clamp b (r, c) = (min (max 1 r) (nrows b), min (max 1 c) (ncols b))
+
+-- | Move a cord to a new cord
+move :: Board -> Cord -> Cord -> Cord
+move board c delta_c = clamp board (addC c delta_c)

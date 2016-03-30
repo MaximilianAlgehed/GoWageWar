@@ -20,7 +20,8 @@ library
     exposed-modules:     GoWageWar.Board,
                          GoWageWar.Board.Cord,
                          GoWageWar.Graphics,
-                         GoWageWar.Event
+                         GoWageWar.Event,
+                         GoWageWar.GameState
     build-depends:       base >=4.8 && <4.9,
                          matrix,
                          brick,
