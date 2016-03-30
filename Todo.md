@@ -4,7 +4,7 @@ Todos organized by category
 ## Design
 * Resource per turn or persistent?
 * Move simultaneously or one after another?
-* Do playtests
+* Playtests!
 
 ## Architecture
 * Move tower to it's own module
@@ -12,6 +12,7 @@ Todos organized by category
 * Implement a clean architecture for the application state
 
 ## Board
+* Change the influence representation to support more than two players
 
 ## Graphics
 * Implement simple GUI
