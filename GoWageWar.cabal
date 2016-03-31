@@ -20,12 +20,16 @@ library
     exposed-modules:     GoWageWar.Board,
                          GoWageWar.Board.Cord,
                          GoWageWar.Graphics,
+                         GoWageWar.Graphics.Attributes,
+                         GoWageWar.Graphics.GameState,
+                         GoWageWar.Graphics.Board,
                          GoWageWar.Event,
                          GoWageWar.GameState
     build-depends:       base >=4.8 && <4.9,
                          matrix,
                          brick,
-                         vty
+                         vty,
+                         containers
     default-language:    Haskell2010
 
 executable GoWageWar

@@ -1,14 +1,17 @@
 module GoWageWar.Board.Cord
     (
         Cord,
+        Direction(..),
         manhattan,
         addC,
-        circle
+        circle,
+        directionToCord
     ) where
+import Prelude hiding (Left, Right)
 import Data.List
 
 -- | A Board co-ordinate
-type Cord      = (Int, Int)
+type Cord = (Int, Int)
 
 -- | Add one Cord to another
 addC :: Cord -> Cord -> Cord
@@ -24,3 +27,16 @@ circle 0 = [(0, 0)]
 circle n = nub $ circle (n-1) ++ lst ++ map (\(x, y) -> (-x, -y)) lst
     where
         lst = [(x, n-x) | x <- [0..n]] ++ [(-x, n-x)| x <- [0..n]]
+
+-- | A direction
+data Direction = Up
+               | Down
+               | Left
+               | Right
+
+-- | Convert a direction to a Cord
+directionToCord :: Direction -> Cord
+directionToCord Up    = (-1, 0)
+directionToCord Down  = (1, 0)
+directionToCord Left  = (0, -1)
+directionToCord Right = (0, 1)
