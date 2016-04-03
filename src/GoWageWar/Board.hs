@@ -14,7 +14,8 @@ module GoWageWar.Board
         addTower,
         calculateResources,
         clamp,
-        move
+        move,
+        nextColour
     ) where
 
 import GoWageWar.Board.Cord
@@ -25,6 +26,10 @@ import Control.Monad
 data Colour = Red
             | Blue
             deriving (Ord, Eq, Show)
+
+nextColour :: Colour -> Colour
+nextColour Red  = Blue
+nextColour Blue = Red
 
 -- | The sign of a colour
 colourSignum :: Colour -> Int

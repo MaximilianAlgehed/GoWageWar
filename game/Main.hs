@@ -20,9 +20,9 @@ m_handleEvent st ev =
         EvKey (KChar 'k') [] -> continue $ moveCursor st Up
         EvKey (KChar 'h') [] -> continue $ moveCursor st Left
         EvKey (KChar 'l') [] -> continue $ moveCursor st Right
-        EvKey (KChar '1') [] -> continue $ placeTower st Red Watchtower
-        EvKey (KChar '2') [] -> continue $ placeTower st Red Keep
-        EvKey (KChar '3') [] -> continue $ placeTower st Red Wall
+        EvKey (KChar '1') [] -> continue $ placeTower st (turn st) Watchtower
+        EvKey (KChar '2') [] -> continue $ placeTower st (turn st) Keep
+        EvKey (KChar '3') [] -> continue $ placeTower st (turn st) Wall
         _                    -> continue st
 
 theApp :: App GameState Event

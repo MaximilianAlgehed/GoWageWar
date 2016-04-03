@@ -24,7 +24,9 @@ library
                          GoWageWar.Graphics.GameState,
                          GoWageWar.Graphics.Board,
                          GoWageWar.Event,
-                         GoWageWar.GameState
+                         GoWageWar.Event.KeyBindings,
+                         GoWageWar.GameState,
+                         GoWageWar.ApplicationState
     build-depends:       base >=4.8 && <4.9,
                          matrix,
                          brick,
