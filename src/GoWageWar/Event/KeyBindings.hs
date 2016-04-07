@@ -1,5 +1,5 @@
 module GoWageWar.Event.KeyBindings
-    (Action,
+    (Action(..),
      keyBindings
     ) where
 
@@ -18,16 +18,16 @@ data Action = EndTurn
             | ExitGame deriving(Ord, Eq)
 
 -- | Key bindings for the local user
-keyBindings :: Map Action Key
+keyBindings :: Map Key Action
 keyBindings = M.fromList
               [
-                (EndTurn,         KChar ' '),
-                (PlaceWatchtower, KChar '1'),
-                (PlaceKeep,       KChar '2'),
-                (PlaceWall,       KChar '3'),
-                (MoveUp,          KChar 'j'),
-                (MoveDown,        KChar 'k'),
-                (MoveLeft,        KChar 'h'),
-                (MoveRight,       KChar 'l'),
-                (ExitGame,        KEsc)
+                (KChar ' ', EndTurn),
+                (KChar '1', PlaceWatchtower),
+                (KChar '2', PlaceKeep),
+                (KChar '3', PlaceWall),
+                (KChar 'j', MoveDown),
+                (KChar 'k', MoveUp),
+                (KChar 'h', MoveLeft),
+                (KChar 'l', MoveRight),
+                (KEsc, ExitGame)
               ]

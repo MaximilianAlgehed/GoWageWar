@@ -150,9 +150,12 @@ calculateResourcesAt board c = case board!c of
                 guard (infl `div` (colourSignum colour) >= 0)
     _                        -> (0, Red)
 
+-- | The base resources every player has available on a turn
+baseResources = 10
+
 -- | Calculate the resources for (red, blue)
 calculateResources :: Board -> (Resources, Resources)
-calculateResources board = foldl fun (0, 0) raw
+calculateResources board = foldl fun (baseResources, baseResources) raw
     where
         raw = map (calculateResourcesAt board) [(i, j) | i <- [1..(nrows board)], j <- [1..(ncols board)]]
         fun (x, y) (z, Red)  = (x+z, y)

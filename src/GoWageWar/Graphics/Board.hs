@@ -39,12 +39,11 @@ toWidget (Nothing, x)
     | x == 0                       = str "." -- No influence from either player
     | signum x == colourSignum Red = padAll padding $ withAttr "red" $ str (show (abs x)) -- Influence from red
     | otherwise                    = padAll padding $ withAttr "blue" $ str (show (abs x)) -- Influence from blue
-toWidget (Just (t, colour), _)
-    | colour == Red                = padAll padding
+toWidget (Just (t, colour), _)     = padAll padding
                                      $ withAttr (colourAttributeName colour)
                                      $ str
                                      $ towerStr t
-    where
-        towerStr Wall       = "⋄"
-        towerStr Watchtower = "∆"
-        towerStr Keep       = "⍟"
+
+towerStr Wall       = "⋄"
+towerStr Watchtower = "∆"
+towerStr Keep       = "⍟"

@@ -14,6 +14,7 @@ import GoWageWar.Board.Cord
 import Control.Monad
 import Data.Matrix
 import qualified Data.Map as M
+import Control.Monad.State.Lazy
 
 -- | Represents the state of the game
 data GameState = GameState {
@@ -24,37 +25,46 @@ data GameState = GameState {
                  }
 
 -- | end the turn
-endTurn :: GameState -> GameState
-endTurn st = st {board = board',
-                 turn  = B.nextColour (turn st),
-                 resources = resources'
-                }
-             where
-                board' = B.endTurn (board st)
-                resources' = M.alter (const (Just blueResources)) B.Blue $ M.alter (const (Just redResources)) B.Red $ resources st
+endTurn :: State GameState ()
+endTurn = do
+            st <- get
+            let board'     = B.endTurn (board st)
                 (redResources, blueResources) = B.calculateResources board'
+                resources' = M.alter (const (Just blueResources)) B.Blue $ M.alter (const (Just redResources)) B.Red $ resources st
+            put $ st {board = board',
+                      turn  = B.nextColour (turn st),
+                      resources = resources'
+                     }
 
 -- | Move the cursor in a given direction
-moveCursor :: GameState -> Direction -> GameState
-moveCursor st d = st {cursor = B.move (board st) c <$> (cursor st)}
+moveCursor :: Direction -> State GameState ()
+moveCursor d = do
+                    st <- get
+                    put $ st {cursor = B.move (board st) c <$> (cursor st)}
     where
         c = directionToCord d
 
 -- | Place a tower on the board
-placeTower :: GameState -> B.Colour -> B.Tower -> GameState
-placeTower st colour t = fromMaybe st (place st t)
-    where
-        place st t = do
-                        cord <- cursor st
-                        if ((resources st)M.!colour) < (B.price t) then
-                            fail "Not enough resources"
-                        else
-                            case (board st) ! cord of
-                                (Nothing, _) -> return st {
-                                    board     = (B.recalculateInfluence (setElem (Just (t, colour), 0) cord (board st))),
-                                    resources = M.adjust (\x -> x-(B.price t)) colour (resources st)
-                                }
-                                _            -> fail "Tile allready in use"
+placeTower :: Maybe Cord -> B.Colour -> B.Tower -> State GameState ()
+placeTower Nothing colour t = do
+                                    st <- get
+                                    put $ fromMaybe st (place (cursor st) st t colour)
+placeTower cord colour t    = do
+                                    st <- get
+                                    put $ fromMaybe st (place cord st t colour)
+
+-- | Do the placing
+place cordm st t colour = do
+                    cord <- cordm
+                    if ((resources st)M.!colour) < (B.price t) then
+                        fail "Not enough resources"
+                    else
+                        case (board st) ! cord of
+                            (Nothing, _) -> return st {
+                                board     = (B.recalculateInfluence (setElem (Just (t, colour), 0) cord (board st))),
+                                resources = M.adjust (\x -> x-(B.price t)) colour (resources st)
+                            }
+                            _            -> fail "Tile allready in use"
 
 -- | Set up the initial state at the start of a game
 initialState :: Int -> Int -> [B.Colour] -> GameState
