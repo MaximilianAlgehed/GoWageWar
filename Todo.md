@@ -12,6 +12,7 @@ Todos organized by category
 * Implement a clean architecture for the application state
 
 ## Board
+* Change the influence printing to print something like * for influence > 9
 * Change the influence representation to support more than two players
 
 ## Graphics
