@@ -37,12 +37,16 @@ padding = 0
 toWidget :: Cell -> Widget
 toWidget (Nothing, x)
     | x == 0                       = str "." -- No influence from either player
-    | signum x == colourSignum Red = padAll padding $ withAttr "red" $ str (show (abs x)) -- Influence from red
-    | otherwise                    = padAll padding $ withAttr "blue" $ str (show (abs x)) -- Influence from blue
+    | signum x == colourSignum Red = padAll padding $ withAttr "red" $ str (show_ (abs x)) -- Influence from red
+    | otherwise                    = padAll padding $ withAttr "blue" $ str (show_ (abs x)) -- Influence from blue
 toWidget (Just (t, colour), _)     = padAll padding
                                      $ withAttr (colourAttributeName colour)
                                      $ str
                                      $ towerStr t
+
+show_ x
+    | x > 9     = "*"
+    | otherwise = show x
 
 towerStr Wall       = "⋄"
 towerStr Watchtower = "∆"
